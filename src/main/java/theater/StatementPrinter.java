@@ -48,14 +48,37 @@ public class StatementPrinter {
                     }
                     thisAmount += Constants.COMEDY_AMOUNT_PER_AUDIENCE * p.audience;
                     break;
+                case "history":
+                    thisAmount = Constants.HISTORY_BASE_AMOUNT;
+                    if (p.audience > Constants.HISTORY_AUDIENCE_THRESHOLD) {
+                        thisAmount += Constants.HISTORY_OVER_BASE_CAPACITY_PER_PERSON
+                                * (p.audience - Constants.HISTORY_AUDIENCE_THRESHOLD);
+                    }
+                    break;
+                case "pastoral":
+                    thisAmount = Constants.PASTORAL_BASE_AMOUNT;
+                    if (p.audience > Constants.PASTORAL_AUDIENCE_THRESHOLD) {
+                        thisAmount += Constants.PASTORAL_OVER_BASE_CAPACITY_PER_PERSON
+                                * (p.audience - Constants.PASTORAL_AUDIENCE_THRESHOLD);
+                    }
+                    break;
                 default:
                     throw new RuntimeException(String.format("unknown type: %s", play.type));
             }
 
             // add volume credits
-            volumeCredits += Math.max(p.audience - Constants.BASE_VOLUME_CREDIT_THRESHOLD, 0);
-            // add extra credit for every five comedy attendees
-            if ("comedy".equals(play.type)) volumeCredits += p.audience / Constants.COMEDY_EXTRA_VOLUME_FACTOR;
+            if ("history".equals(play.type)) {
+                volumeCredits += Math.max(p.audience - Constants.HISTORY_VOLUME_CREDIT_THRESHOLD, 0);
+            } else if ("pastoral".equals(play.type)) {
+                volumeCredits += Math.max(p.audience - Constants.PASTORAL_VOLUME_CREDIT_THRESHOLD, 0)
+                        + p.audience / 2;
+            } else {
+                volumeCredits += Math.max(p.audience - Constants.BASE_VOLUME_CREDIT_THRESHOLD, 0);
+                // add extra credit for every five comedy attendees
+                if ("comedy".equals(play.type)) {
+                    volumeCredits += p.audience / Constants.COMEDY_EXTRA_VOLUME_FACTOR;
+                }
+            }
 
             // print line for this order
             result.append(String.format("  %s: %s (%s seats)%n", play.name, frmt.format(thisAmount / 100), p.audience));
