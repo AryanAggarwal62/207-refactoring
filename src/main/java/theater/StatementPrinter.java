@@ -32,13 +32,13 @@ public class StatementPrinter {
     public String statement() {
         int totalAmount = 0;
         int volumeCredits = 0;
-        StringBuilder result = new StringBuilder("Statement for "
+        final StringBuilder result = new StringBuilder("Statement for "
                 + this.invoice.getCustomer() + System.lineSeparator());
 
         final NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
 
         for (Performance p : this.invoice.getPerformances()) {
-            Play play = this.plays.get(p.getPlayID());
+            final Play play = this.plays.get(p.getPlayID());
 
             int thisAmount = 0;
             switch (play.getType()) {
@@ -79,10 +79,12 @@ public class StatementPrinter {
             // add volume credits
             if ("history".equals(play.getType())) {
                 volumeCredits += Math.max(p.getAudience() - Constants.HISTORY_VOLUME_CREDIT_THRESHOLD, 0);
-            } else if ("pastoral".equals(play.getType())) {
+            }
+            else if ("pastoral".equals(play.getType())) {
                 volumeCredits += Math.max(p.getAudience() - Constants.PASTORAL_VOLUME_CREDIT_THRESHOLD, 0)
                         + p.getAudience() / Constants.PASTORAL_VOLUME_CREDIT_DIVISOR;
-            } else {
+            }
+            else {
                 volumeCredits += Math.max(p.getAudience() - Constants.BASE_VOLUME_CREDIT_THRESHOLD, 0);
                 // add extra credit for every five comedy attendees
                 if ("comedy".equals(play.getType())) {
