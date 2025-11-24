@@ -1,6 +1,6 @@
 096c8ec Task 1.1
-Task 1.2
-Task 2.1
-Task 2.2
-Task 2.3
-Task 2.4
+dad2a13 Task 1.2
+3e23ab9 Task 2.1
+72af9f4 Task 2.2
+02288a4 Task 2.3
+3b40ba2 Task 2.4
